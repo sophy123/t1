@@ -44,7 +44,7 @@ class ListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayTableViewCell", for: indexPath) as! CustomTableViewCell
         cell.day = days[indexPath.section][indexPath.row]
         
-        print("the second time")
+        print("the 3rd time")
         // Configure the cell...
 
         return cell
