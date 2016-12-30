@@ -44,6 +44,7 @@ class ListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayTableViewCell", for: indexPath) as! CustomTableViewCell
         cell.day = days[indexPath.section][indexPath.row]
         print("configure the detail of the cell")
+        print("before add add")
 
         // Configure the cell...
 
