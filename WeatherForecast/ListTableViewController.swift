@@ -43,9 +43,8 @@ class ListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayTableViewCell", for: indexPath) as! CustomTableViewCell
         cell.day = days[indexPath.section][indexPath.row]
-        print("configure the detail of the cell")
-        print("before add add")
-
+        
+        print("the second time")
         // Configure the cell...
 
         return cell
