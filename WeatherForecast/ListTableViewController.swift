@@ -45,6 +45,7 @@ class ListTableViewController: UITableViewController {
         cell.day = days[indexPath.section][indexPath.row]
         
         print("the 3rd time")
+        print("the 5th time")
         // Configure the cell...
 
         return cell
