@@ -14,7 +14,7 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
    
     @IBOutlet weak var myButton: UIButton!{
         didSet{
-            myButton.enabled = false
+            myButton.isEnabled = false
         }
     }
     var today: Day!
@@ -23,7 +23,7 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
         didSet{
             today = self.receivedData.days[0]
             todayWeather = today.weather[0]
-            myButton?.enabled = true
+            myButton?.isEnabled = true
             updateCurrentUI()
         }
     }
@@ -63,12 +63,12 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
     func updateCurrentLocation(){
         let status: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
         print("\(status.rawValue)")
-        if (status == .NotDetermined) || (status == .Restricted) || (status == .Denied) {
+        if (status == .notDetermined) || (status == .restricted) || (status == .denied) {
             print("locationManager status is not allowed, then use default city -- Bygrave")
             self.locationManager.requestWhenInUseAuthorization()
             return
         }
-        if (status == .AuthorizedWhenInUse) || (status == .AuthorizedAlways)
+        if (status == .authorizedWhenInUse) || (status == .authorizedAlways)
         {
             print("locationManager status is allowed")
             setLocationManager()
@@ -82,18 +82,18 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
         locationManager.startUpdatingLocation()
         print("settng locationManager")
     }
-    internal func locationManager (manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    internal func locationManager (_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         
-        if (status == CLAuthorizationStatus.AuthorizedWhenInUse) || (status == CLAuthorizationStatus.AuthorizedAlways){
+        if (status == CLAuthorizationStatus.authorizedWhenInUse) || (status == CLAuthorizationStatus.authorizedAlways){
             print("locationManager did Change AuthorizationStatus To Be allowed")
         }
         
     }
    
-    internal func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("locationManager didFailwithError:\(error)")
     }
-    internal func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         manager.stopUpdatingLocation()
         myLocation = locations.last! as CLLocation
         print("locationManager didupdateLocation:\(myLocation)")
@@ -107,18 +107,18 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
     @IBOutlet weak var dayTemp: UILabel!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    private func updateData(){
-        let path = NSURL(string: "\(baseUrl)lat=\(latitude)&lon=\(longitude)&cnt=\(count)&mode=json&units=metric&appid=1a56caf11aa6467b6d876eeea0c4e548")!
+    fileprivate func updateData(){
+        let path = URL(string: "\(baseUrl)lat=\(latitude)&lon=\(longitude)&cnt=\(count)&mode=json&units=metric&appid=1a56caf11aa6467b6d876eeea0c4e548")!
         nextSessionToAttempt.fetchWeather(path)
         {(newWeather) -> Void in
-            dispatch_async(dispatch_get_main_queue()){ () -> Void in
+            DispatchQueue.main.async{ () -> Void in
                 if newWeather != nil {
                     if newWeather!.count > 0 {
                         self.receivedData = newWeather
                     }
                 }else{
                     print("no data")
-                    self.myButton?.enabled = false
+                    self.myButton?.isEnabled = false
                     self.spinner.stopAnimating()
                     self.popAlert()
                 }
@@ -126,15 +126,15 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
         }
     }
     internal func popAlert(){
-        let alert = UIAlertController(title: "Error", message: "Ops! It seems that the internet doesn't work", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.Default, handler: {action in
+        let alert = UIAlertController(title: "Error", message: "Ops! It seems that the internet doesn't work", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: {action in
             self.spinner.startAnimating()
             self.updateCurrentLocation()
             self.nextSessionToAttempt = WeatherRequest()
             self.updateData()
             
         }))
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
     internal func updateCurrentUI(){
@@ -144,12 +144,12 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
         spinner.stopAnimating()
     }
     
-    private func updateWeatherImageView(){
+    fileprivate func updateWeatherImageView(){
         if let profileImageUrl = todayWeather.iconUrl{
-            let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-            dispatch_async(dispatch_get_global_queue(qos, 0)){() -> Void in
-                if let imageData = NSData(contentsOfURL: profileImageUrl){
-                    dispatch_async(dispatch_get_main_queue()){ () -> Void in
+            let qos = Int(DispatchQoS.QoSClass.userInitiated.rawValue)
+            DispatchQueue.global(priority: qos).async{() -> Void in
+                if let imageData = try? Data(contentsOf: profileImageUrl){
+                    DispatchQueue.main.async{ () -> Void in
                         self.weatherImageView?.image = UIImage(data: imageData)
                     }
                 }
@@ -198,7 +198,7 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
         
             
     }
-    private func startAnimation(){
+    fileprivate func startAnimation(){
         var images: [UIImage] = []
         for i in 1...2 {
             images.append(UIImage(named: "win_\(i)")!)
@@ -208,9 +208,9 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate
         myImageView.startAnimating()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let destination: UIViewController = segue.destinationViewController
+        let destination: UIViewController = segue.destination
        
         if let lvc = destination as? ListTableViewController{
             if let identifier = segue.identifier{

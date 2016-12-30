@@ -13,9 +13,9 @@ public struct Coord: CustomStringConvertible
     public var lon: Double
     
     public init?(data: NSDictionary!) {
-        if let lat = data?.valueForKeyPath("lat") as? Double{
+        if let lat = data?.value(forKeyPath: "lat") as? Double{
             self.lat = lat
-            if let lon = data?.valueForKeyPath("lon") as? Double{
+            if let lon = data?.value(forKeyPath: "lon") as? Double{
                 self.lon = lon
                 return
             }

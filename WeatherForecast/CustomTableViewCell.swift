@@ -64,10 +64,10 @@ class CustomTableViewCell: UITableViewCell {
             highAndLowTemp.text = str
             
             if let profileImageUrl = day.weather[0].iconUrl{
-                let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-                dispatch_async(dispatch_get_global_queue(qos, 0)){() -> Void in
-                    if let imageData = NSData(contentsOfURL: profileImageUrl){
-                        dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                let qos = Int(DispatchQoS.QoSClass.userInitiated.rawValue)
+                DispatchQueue.global(priority: qos).async{() -> Void in
+                    if let imageData = try? Data(contentsOf: profileImageUrl){
+                        DispatchQueue.main.async{ () -> Void in
                             self.weatherImageView?.image = UIImage(data: imageData)
                         }
                     }

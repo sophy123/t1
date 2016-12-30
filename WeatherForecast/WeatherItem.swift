@@ -12,21 +12,21 @@ public struct WeatherItem: CustomStringConvertible
 {
     public var weatherDescription: String
     public var icon: String
-    public var iconUrl: NSURL?
+    public var iconUrl: URL?
     public var id: Int
     public var main: String
     
-    private let iconBaseUrl = "http://openweathermap.org/img/w/"
+    fileprivate let iconBaseUrl = "http://openweathermap.org/img/w/"
     
     init?(data: NSDictionary?) {
-        if let weatherDescription = data?.valueForKeyPath("description") as? String {
+        if let weatherDescription = data?.value(forKeyPath: "description") as? String {
             self.weatherDescription = weatherDescription
-            if let icon = data?.valueForKeyPath("icon") as? String {
+            if let icon = data?.value(forKeyPath: "icon") as? String {
                 self.icon = icon
-                self.iconUrl = NSURL(string: iconBaseUrl + icon + ".png")!
-                if let id = data?.valueForKeyPath("id") as? Int {
+                self.iconUrl = URL(string: iconBaseUrl + icon + ".png")!
+                if let id = data?.value(forKeyPath: "id") as? Int {
                     self.id = id
-                    if let main = data?.valueForKeyPath("main") as? String {
+                    if let main = data?.value(forKeyPath: "main") as? String {
                         self.main = main
                         return
                     }

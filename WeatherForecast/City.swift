@@ -22,15 +22,15 @@ public struct City: CustomStringConvertible
     }
     
     init?(data: NSDictionary?) {
-        if let country = data?.valueForKeyPath("country") as? String{
+        if let country = data?.value(forKeyPath: "country") as? String{
             self.country = country
-            if let id = data?.valueForKeyPath("id") as? Int{
+            if let id = data?.value(forKeyPath: "id") as? Int{
                 self.id = id
-                if let name = data?.valueForKeyPath("name") as? String{
+                if let name = data?.value(forKeyPath: "name") as? String{
                     self.name = name
-                    if let population = data?.valueForKeyPath("population") as? Int{
+                    if let population = data?.value(forKeyPath: "population") as? Int{
                         self.population = population
-                        if let coord = Coord(data: data?.valueForKeyPath("coord") as! NSDictionary) {
+                        if let coord = Coord(data: data?.value(forKeyPath: "coord") as! NSDictionary) {
                             self.coord = coord
                             return
                         }

@@ -29,27 +29,27 @@ public struct Day: CustomStringConvertible
     
         init?(data: NSDictionary?)
         {
-            if let snow = data?.valueForKeyPath("snow") as? Double{
+            if let snow = data?.value(forKeyPath: "snow") as? Double{
                 self.snow = snow
             }
-            if let rain = data?.valueForKeyPath("rain") as? Double{
+            if let rain = data?.value(forKeyPath: "rain") as? Double{
                 self.rain = rain
             }
-            if let temp = Temperature(data: data?.valueForKeyPath("temp") as? NSDictionary) {
+            if let temp = Temperature(data: data?.value(forKeyPath: "temp") as? NSDictionary) {
                 self.temp = temp
-                if let clouds = data?.valueForKeyPath("clouds") as? Int {
+                if let clouds = data?.value(forKeyPath: "clouds") as? Int {
                     self.clouds = clouds
-                    if let deg = data?.valueForKeyPath("deg") as? Int {
+                    if let deg = data?.value(forKeyPath: "deg") as? Int {
                         self.deg = deg
-                        if let dt = data?.valueForKeyPath("dt") as? Int {
+                        if let dt = data?.value(forKeyPath: "dt") as? Int {
                             self.dt = timeStampToString(dt)
-                            if let humidity = data?.valueForKeyPath("humidity") as? Int {
+                            if let humidity = data?.value(forKeyPath: "humidity") as? Int {
                                 self.humidity = humidity
-                                if let pressure = data?.valueForKeyPath("pressure") as? Double {
+                                if let pressure = data?.value(forKeyPath: "pressure") as? Double {
                                     self.pressure = pressure
-                                    if let speed = data?.valueForKeyPath("speed") as? Double {
+                                    if let speed = data?.value(forKeyPath: "speed") as? Double {
                                         self.speed = speed
-                                        if let weatherItems = data?.valueForKeyPath("weather") as? NSArray {
+                                        if let weatherItems = data?.value(forKeyPath: "weather") as? NSArray {
                                             for weatherData in weatherItems{
                                                 if let weatherItem = WeatherItem(data: weatherData as? NSDictionary){
                                                     weather.append(weatherItem)
@@ -73,11 +73,11 @@ public struct Day: CustomStringConvertible
             return nil
         }
     
-    public func timeStampToString(timeStamp: Int)->String {
-        let timeSta:NSTimeInterval = Double(timeStamp)
-        let outputFormat = NSDateFormatter()
+    public func timeStampToString(_ timeStamp: Int)->String {
+        let timeSta:TimeInterval = Double(timeStamp)
+        let outputFormat = DateFormatter()
         outputFormat.dateFormat = "dd/MM EEE"
-        let date = NSDate(timeIntervalSince1970: timeSta)
-        return outputFormat.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: timeSta)
+        return outputFormat.string(from: date)
     }
 }

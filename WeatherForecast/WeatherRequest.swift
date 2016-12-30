@@ -9,13 +9,13 @@
 import Foundation
 import CoreLocation
 
-public class WeatherRequest: NSObject
+open class WeatherRequest: NSObject
 {
  
     public override init(){
         super.init()
     }
-    public func fetchWeather(path: NSURL, completionHandler :(ReceivedItem?) -> Void) {
+    open func fetchWeather(_ path: URL, completionHandler :@escaping (ReceivedItem?) -> Void) {
         fetch(path){
             results in
             var myResults: ReceivedItem?
@@ -48,24 +48,24 @@ public class WeatherRequest: NSObject
         }
     }
     
-    public func fetch(path: NSURL,completionHandler: (results: AnyObject?) -> Void){
+    open func fetch(_ path: URL,completionHandler: @escaping (_ results: AnyObject?) -> Void){
         performWeatherRequest(path, completionHandler: completionHandler)
     }
     
-    func performWeatherRequest(path: NSURL,completionHandler: (AnyObject?) -> Void){
+    func performWeatherRequest(_ path: URL,completionHandler: @escaping (AnyObject?) -> Void){
        // var path = NSURL(string: "\(baseUrl)lat=\(latitude)&lon=\(longitude)&cnt=\(count)&mode=json&units=metric&appid=1a56caf11aa6467b6d876eeea0c4e548")!
         sendWeatherRequest(path, completionHandler: completionHandler)
     }
     
-    func  sendWeatherRequest(path: NSURL, completionHandler: (AnyObject?) -> Void){
-        let request = NSMutableURLRequest(URL: path)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { (jsonResponse, httpResponse, myError) in
+    func  sendWeatherRequest(_ path: URL, completionHandler: @escaping (AnyObject?) -> Void){
+        let request = NSMutableURLRequest(url: path)
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { (jsonResponse, httpResponse, myError) in
             var propertyListResponse :AnyObject?
             if jsonResponse != nil {
-                propertyListResponse = try? NSJSONSerialization.JSONObjectWithData(
-                    jsonResponse!,
-                    options: NSJSONReadingOptions.MutableLeaves
+                propertyListResponse = try? JSONSerialization.jsonObject(
+                    with: jsonResponse!,
+                    options: JSONSerialization.ReadingOptions.mutableLeaves
                 )
                 if propertyListResponse == nil {
                     let error = "Couldn't parse JSON response."
@@ -78,7 +78,7 @@ public class WeatherRequest: NSObject
                 propertyListResponse = error
             }
             completionHandler(propertyListResponse)
-        }
+        }) 
         task.resume()
     }
     

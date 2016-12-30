@@ -17,17 +17,17 @@ public struct Temperature: CustomStringConvertible
     public var night: Int
     
     init?(data: NSDictionary?) {
-        if let day = data?.valueForKeyPath("day") as? Int {
+        if let day = data?.value(forKeyPath: "day") as? Int {
             self.day = day
-            if let eve = data?.valueForKeyPath("eve") as? Int {
+            if let eve = data?.value(forKeyPath: "eve") as? Int {
                 self.eve = eve
-                if let max = data?.valueForKeyPath("max") as? Int {
+                if let max = data?.value(forKeyPath: "max") as? Int {
                     self.max = max
-                    if let min = data?.valueForKeyPath("min") as? Int {
+                    if let min = data?.value(forKeyPath: "min") as? Int {
                         self.min = min
-                        if let morn = data?.valueForKeyPath("morn") as? Int {
+                        if let morn = data?.value(forKeyPath: "morn") as? Int {
                             self.morn = morn
-                            if let night = data?.valueForKeyPath("night") as? Int {
+                            if let night = data?.value(forKeyPath: "night") as? Int {
                                 self.night = night
                                 return
                             }
